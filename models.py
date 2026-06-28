@@ -21,7 +21,7 @@ class EncoderBlock(torch.nn.Module):
         h = self.conv1(x)
         h = self.bn1(h)
         h = torch.nn.ReLU()(h)
-        h = self.conv2(x)
+        h = self.conv2(h)
         h = self.bn2(h)
         h = torch.nn.ReLU()(h)
         return h
