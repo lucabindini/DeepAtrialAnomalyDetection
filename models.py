@@ -11,7 +11,7 @@ class EncoderBlock(torch.nn.Module):
                                      kernel_size=kernel_size,
                                      padding='same')
         self.bn1 = torch.nn.BatchNorm1d(num_filters)
-        self.conv2 = torch.nn.Conv1d(in_channels=in_channels,
+        self.conv2 = torch.nn.Conv1d(in_channels=num_filters,
                                      out_channels=num_filters,
                                      kernel_size=kernel_size,
                                      stride=2,
