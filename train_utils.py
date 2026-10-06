@@ -82,15 +82,15 @@ class TrainerDeepSVDD:
     def save_weights_for_DeepSVDD(self, model, dataloader):
         """Initialize Deep SVDD weights using the encoder weights of the pretrained autoencoder."""
         net = models.DeepSVDDEncoder(self.in_channels, self.num_filters, self.kernel_size, self.bottleneck_dim).to(self.device)
-        c = self.set_c(model, net, dataloader)
         state_dict = model.state_dict()
         net.load_state_dict(state_dict, strict=False)
+        c = self.set_c(model, net, dataloader)
         torch.save({'center': c.cpu().data.numpy().tolist(),
                     'net_dict': net.state_dict()}, os.path.join(self.weights_folder, 'pretrained_parameters.pth'))
     
     def set_c(self, model, net,  dataloader, eps=0.1):
         """Initializing the center for the hypersphere"""
-        model.eval()
+        net.eval()
         z_ = []
         with torch.no_grad():
             for x in dataloader:
