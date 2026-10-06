@@ -50,8 +50,8 @@ class TrainerDeepSVDD:
             ae = models.Autoencoder(self.in_channels, self.num_filters, self.kernel_size, self.bottleneck_dim).to(self.device)
             ae.apply(self.weights_init_normal)
             optimizer = torch.optim.Adam(ae.parameters(), 1e-4, weight_decay=0.5e-3)
-            ae.train()
             for epoch in range(num_epochs):
+                ae.train()
                 total_loss = 0
                 total_val_loss = 0
                 for x in Bar(dataloader):
@@ -63,6 +63,7 @@ class TrainerDeepSVDD:
                     optimizer.step()
                     total_loss += reconst_loss.item()
 
+                ae.eval()
                 with torch.no_grad():
                     for x in val_loader:
                         x = x.float().to(self.device)
@@ -76,7 +77,7 @@ class TrainerDeepSVDD:
                        epoch, total_loss/len(dataloader), total_val_loss/len(val_loader)))
 
             torch.save(ae, pretrained_path)
-            self.save_weights_for_DeepSVDD(ae, dataloader)
+        self.save_weights_for_DeepSVDD(ae, dataloader)
         self.ae = ae
     
     def save_weights_for_DeepSVDD(self, model, dataloader):
